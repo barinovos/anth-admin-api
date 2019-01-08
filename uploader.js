@@ -1,8 +1,7 @@
-const uuid = require('uuid/v4')
 const express = require('express')
 
 module.exports = {
-    init(app, db) {
+    init(app, uploadCb) {
         const multer  = require('multer')
 
         const possibleMimetypes = ['image/jpeg', 'image/png'];
@@ -28,15 +27,6 @@ module.exports = {
 
         app.use(`/${folder}`, express.static(folder))
 
-        app.post('/upload', upload.array('images[]', 12), function (req, res, next) {
-            const uploads = req.files.map(f => ({
-                id: uuid(),
-                filePath: f.path,
-                title: f.filename,
-                size: f.size
-            }))
-            uploads.forEach(upl => db.push(upl))
-            res.send(uploads)
-        })
+        app.post('/upload', upload.array('images[]', 12), uploadCb)
     }
 }
