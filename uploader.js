@@ -16,12 +16,13 @@ module.exports = {
             cb(null, `${Date.now()}.${extension}`)
             }
         })
+        
         const fileFilter = (req, file, cb) => {
-        if (possibleMimetypes.includes(file.mimetype)) {
-            cb(null, true)
-        } else {
-            cb(null, false)
-        }
+            if (possibleMimetypes.includes(file.mimetype)) {
+                cb(null, true)
+            } else {
+                cb(null, false)
+            }
         }
         const upload = multer({ storage, fileFilter })
 

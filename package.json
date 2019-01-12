@@ -14,8 +14,10 @@
   "author": "BarinovOS",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "image-size": "^0.7.1",
     "multer": "^1.4.1",
     "uuid": "^3.3.2"
   },
