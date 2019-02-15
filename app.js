@@ -5,6 +5,10 @@ const sizeOf = require('image-size')
 const bodyParser = require('body-parser')
 const app = express()
 const port = process.env.PORT || 9000
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // PROD
 let db = [];
@@ -41,8 +45,8 @@ app.delete('/image/:id', (req, res) => {
     }
 })
 
-app.put('/add-to-canvas/:id', (req, res) => {
-    const imageId = req.params.id;
+app.put('/add-to-canvas/:imageId', (req, res) => {
+    const imageId = req.params.imageId;
     const itemToUpdate = checkForItemWithRespond(imageId, res)
     if (itemToUpdate) {
         db = db.map(im => im.id === imageId ? { ...im, onCanvas: true } : im)
@@ -51,8 +55,8 @@ app.put('/add-to-canvas/:id', (req, res) => {
     }
 })
 
-app.delete('/remove-from-canvas/:id', (req, res) => {
-    const imageId = req.params.id;
+app.delete('/remove-from-canvas/:imageId', (req, res) => {
+    const imageId = req.params.imageId;
     if (checkForItemWithRespond(imageId, res)) {
         removeFromCanvas(imageId)
         db = db.map(im => im.id === imageId ? { ...im, onCanvas: false } : im)
@@ -60,9 +64,9 @@ app.delete('/remove-from-canvas/:id', (req, res) => {
     }
 })
 
-app.put('/canvas/:id', (req, res) => {
+app.put('/canvas/:imageId', (req, res) => {
     const data = req.body;
-    const imageId = req.params.id;
+    const imageId = req.params.imageId;
     if (canvas[imageId]) {
         const oldData = { ...canvas[imageId] };
         canvas[imageId] = { ...oldData, ...data, path: oldData.path }
@@ -125,3 +129,6 @@ const uploadCb = function (req, res) {
 require('./uploader').init(app, uploadCb);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+
+//nexus.corp.mobile.de/nexus/content/groups/npm-all/:_authToken=NpmToken.397fea42-76f1-39cb-9715-1b61e35a1668
+// _auth=b2Jhcmlub3Y6QmFyaWdhMTIzamtidmdiZmxmISQ=

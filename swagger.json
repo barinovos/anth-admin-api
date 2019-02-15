@@ -1,0 +1,267 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": " Anthromes Mock API",
+    "description": "API for the Admin part of the Anthromes project by @FreddyTheGreat",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "https://anth-api.herokuapp.com",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Sections",
+      "description": "API for sections with images on the Canvas"
+    }
+  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/canvas": {
+      "get": {
+        "tags": ["Canvas"],
+        "summary": "Get all images on canvas",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Canvas"
+            }
+          }
+        }
+      }
+    },
+    "/canvas/:imageId": {
+      "parameters": [
+        {
+          "name": "imageId",
+          "in": "path",
+          "required": true,
+          "description": "ID of an image",
+          "type": "string"
+        }
+      ],
+      "put": {
+        "summary": "Update image position with given ID on the canvas",
+        "tags": ["Canvas", "CanvasItem"],
+        "parameters": [
+          {
+            "name": "x",
+            "in": "body",
+            "description": "new x coord",
+            "schema": {
+              "$ref": "#/definitions/CanvasItem"
+            }
+          },
+          {
+            "name": "y",
+            "in": "body",
+            "description": "new y coord",
+            "schema": {
+              "$ref": "#/definitions/CanvasItem"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Canvas is updated",
+            "schema": {
+              "$ref": "#/definitions/CanvasItem"
+            }
+          }
+        }
+      }
+    },
+    "/add-to-canvas/:imageId": {
+      "parameters": [
+        {
+          "name": "imageId",
+          "in": "path",
+          "required": true,
+          "description": "ID of an image",
+          "type": "string"
+        }
+      ],
+      "put": {
+        "summary": "Update Canvas with given imageId",
+        "tags": ["Canvas", "Image"],
+        "responses": {
+          "200": {
+            "description": "Canvas is updated",
+            "schema": {
+              "$ref": "#/definitions/Canvas"
+            }
+          }
+        }
+      }
+    },
+    "/remove-from-canvas/:imageId": {
+      "parameters": [
+        {
+          "name": "imageId",
+          "in": "path",
+          "required": true,
+          "description": "ID of an image",
+          "type": "string"
+        }
+      ],
+      "delete": {
+        "summary": "Remove form Canvas image with given imageId",
+        "tags": ["Canvas", "Image"],
+        "responses": {
+          "200": {
+            "description": "Canvas is updated",
+            "schema": {
+              "$ref": "#/definitions/Canvas"
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": ["Images"],
+        "summary": "Get all uploaded Images",
+        "responses": {
+          "200": {
+            "description": "Array of Images",
+            "schema": {
+              "$ref": "#/definitions/Images"
+            }
+          }
+        }
+      }
+    },
+    "/images": {
+      "get": {
+        "tags": ["Images"],
+        "summary": "Get all uploaded Images",
+        "responses": {
+          "200": {
+            "description": "Array of Images",
+            "schema": {
+              "$ref": "#/definitions/Images"
+            }
+          }
+        }
+      }
+    },
+    "/images/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of an image",
+          "type": "string"
+        }
+      ],
+      "delete": {
+        "summary": "Delete image with given ID",
+        "tags": ["Images"],
+        "responses": {
+          "200": {
+            "description": "Image is deleted",
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update image with give ID",
+        "tags": ["Images"],
+        "parameters": [
+          {
+            "name": "title",
+            "in": "body",
+            "description": "Image with new values of properties (on drag on Canvas only)",
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          },
+          {
+            "name": "dimension",
+            "in": "body",
+            "description": "Image with new values of properties (on drag on Canvas only)",
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Image is updated",
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CanvasItem": {
+      "required": ["x", "y", "width", "height", "path"],
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "path": {
+          "type": "string"
+        }
+      }
+    },
+    "Canvas": {
+      "type": "array",
+      "$ref": "#/definitions/CanvasItem"
+    },
+    "Image": {
+      "required": ["id", "filePath"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "title": {
+          "type": "string"
+        },
+        "size": {
+          "type": "number"
+        },
+        "dimension": {
+          "type": "number"
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "filePath": {
+          "type": "string"
+        },
+        "onCanvas": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Images": {
+      "type": "array",
+      "$ref": "#/definitions/Image"
+    }
+  }
+}
