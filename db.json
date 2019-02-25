@@ -10,8 +10,38 @@
       "medium": "",
       "year": "",
       "synopisis": ""
+    },
+    {
+      "id": "bc310789-43e3-43e6-9ac6-4cbcd831ad87",
+      "imageIds": [
+        "60deba3b-e462-478e-97d9-bb543ec2caf8",
+        "77705352-5767-4116-8f29-c039bdefd7d9"
+      ],
+      "name": "Section with images",
+      "width": "500",
+      "length": "",
+      "depth": "",
+      "medium": "",
+      "year": "2019",
+      "synopisis": "Very good one!"
     }
   ],
   "images": [
+    {
+      "id": "60deba3b-e462-478e-97d9-bb543ec2caf8",
+      "filePath": "uploads/1551106182218.jpg",
+      "title": "1551106182218.jpg",
+      "size": 171702,
+      "width": 1280,
+      "height": 960
+    },
+    {
+      "id": "77705352-5767-4116-8f29-c039bdefd7d9",
+      "filePath": "uploads/1551106182224.jpg",
+      "title": "1551106182224.jpg",
+      "size": 181984,
+      "width": 864,
+      "height": 480
+    }
   ]
 }
