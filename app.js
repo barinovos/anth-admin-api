@@ -5,130 +5,146 @@ const sizeOf = require('image-size')
 const bodyParser = require('body-parser')
 const app = express()
 const port = process.env.PORT || 9000
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
+const swaggerUi = require('swagger-ui-express')
+const swaggerDocument = require('./swagger.json')
+const low = require('lowdb')
+const FileSync = require('lowdb/adapters/FileSync')
+// const flatten = require('lodash/flatten')
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-// PROD
-let db = [];
-// DEV: for testing purpose
-// let db = [{"id":"7fcb6ad1-5517-4ed5-b3bb-9e7a2e88bae8","filePath":"uploads/1547302188557.jpg","title":"1547302188557.jpg","size":171702,"width":1280,"height":960,"onCanvas":false,"dimension":1}];
-const canvas = {};
-
-app.use(cors())
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-// just a handover - default GET is for images (for now)
-app.get('/', (req, res) => res.send(db))
-
-app.get('/canvas', (req, res) => res.send(canvas))
-
-app.get('/images', (req, res) => res.send(db))
-
-app.put('/image/:id', (req, res) => {
-    const imageId = req.params.id
-    const itemToUpdate = checkForItemWithRespond(imageId, res)
-    if (itemToUpdate) {
-        const newItem = updateItem(itemToUpdate, req.body)
-        db = db.map(im => im.id === imageId ? newItem : im)
-        res.send(db)
-    }
-})
-
-app.delete('/image/:id', (req, res) => {
-    const imageId = req.params.id
-    if (checkForItemWithRespond(imageId, res)) {
-        db = db.filter(im => im.id !== imageId)
-        removeFromCanvas(imageId)
-        res.send(db)
-    }
-})
-
-app.put('/add-to-canvas/:imageId', (req, res) => {
-    const imageId = req.params.imageId;
-    const itemToUpdate = checkForItemWithRespond(imageId, res)
-    if (itemToUpdate) {
-        db = db.map(im => im.id === imageId ? { ...im, onCanvas: true } : im)
-        canvas[imageId] = addToCanvas(itemToUpdate)
-        res.send(db)
-    }
-})
-
-app.delete('/remove-from-canvas/:imageId', (req, res) => {
-    const imageId = req.params.imageId;
-    if (checkForItemWithRespond(imageId, res)) {
-        removeFromCanvas(imageId)
-        db = db.map(im => im.id === imageId ? { ...im, onCanvas: false } : im)
-        res.send(db)
-    }
-})
-
-app.put('/canvas/:imageId', (req, res) => {
-    const data = req.body;
-    const imageId = req.params.imageId;
-    if (canvas[imageId]) {
-        const oldData = { ...canvas[imageId] };
-        canvas[imageId] = { ...oldData, ...data, path: oldData.path }
-        res.send(canvas)
-    } else {
-        res.status(404).send(`Item ${imageId} is not on the canvas`)
-    }
-})
-
-const checkForItemWithRespond = (imageId, res) => {
-    const imageToUpdate = db.find(im => im.id === imageId)
-    if (!imageToUpdate) { 
-        res.status(404).send(`Image with id ${imageId} not found`)
-        return false
-    }
-    return imageToUpdate
+const adapter = new FileSync('db.json')
+const db = low(adapter)
+const dbFields = {
+  images: 'images',
+  sections: 'sections',
 }
 
-const addToCanvas = item => ({
+// DEV: for testing purpose
+let mockImages = [
+  {
+    id: '7fcb6ad1-5517-4ed5-b3bb-9e7a2e88bae8',
+    filePath: 'uploads/1547302188557.jpg',
+    title: '1547302188557.jpg',
+    size: 171702,
+    width: 1280,
+    height: 960,
+    dimension: 1,
+  },
+]
+
+app.use(cors())
+app.use(bodyParser.json()) // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+
+// just a handover - default GET is for images (for now)
+app.get('/db', (req, res) => res.send(db.getState()))
+
+app.post('/section', (req, res) => {
+  try {
+    const newSection = {
+      id: uuid(),
+      imageIds: [],
+      ...req.body,
+    }
+    db.update(dbFields.sections, arr => arr.concat(newSection)).write()
+    res.send(db.getState())
+  } catch (e) {
+    onError(e, res)
+  }
+})
+
+app.put('/section/:sectionId', (req, res) => {
+  try {
+    const sectionId = req.params.sectionId
+    const data = req.body
+    db.update(dbFields.sections, arr =>
+      arr.map(section => (section.id === sectionId ? { ...section, ...data, id: sectionId } : section)),
+    ).write()
+    res.send(db.getState())
+  } catch (e) {
+    onError(e, res)
+  }
+})
+
+app.delete('/section/:id', (req, res) => {
+  try {
+    const sectionId = req.params.id
+    const section = db
+      .get(dbFields.sections)
+      .find({ id: sectionId })
+      .value()
+    section.imageIds.forEach(imId =>
+      db
+        .get(dbFields.images)
+        .remove({ id: imId })
+        .write(),
+    )
+    db.get(dbFields.sections)
+      .remove({ id: sectionId })
+      .write()
+    res.send(db)
+  } catch (e) {
+    onError(e, res)
+  }
+})
+
+/*
+const addToCanvas = (itemId, item) => {
+  const newItem = {
     x: 0,
     y: 0,
     width: item.width,
     height: item.height,
-    path: item.filePath
-})
+    path: item.filePath,
+    itemId,
+  }
+}
 
 const updateItem = (item, data) => ({
-    ...item,
-    ...data,
-    id: item.id,
-    filePath: item.filePath,
-    size: item.size,
-    onCanvas: item.onCanvas
+  ...item,
+  ...data,
+  id: item.id,
+  filePath: item.filePath,
+  size: item.size,
+  onCanvas: item.onCanvas,
+})
+*/
+
+const onError = (err, res) => {
+  console.log(err)
+  res.status(400).send(`Wrong request`)
+}
+
+const newImage = (f, { width, height }) => ({
+  id: uuid(),
+  filePath: f.path,
+  title: f.filename,
+  size: f.size,
+  width,
+  height,
 })
 
-const removeFromCanvas = itemId => {
-    if (canvas[itemId]) {
-        delete canvas[itemId];
-    }
+const uploadCb = function(req, res) {
+  const uploads = req.files.map(f => newImage(f, sizeOf(f.path)))
+  const sectionId = req.body.sectionId
+  db.update(dbFields.images, arr => [...arr, ...uploads]).write()
+  if (sectionId) {
+    addImagesToSection(sectionId, uploads.map(upl => upl.id))
+  }
+  res.send(db.getState())
 }
 
-const uploadCb = function (req, res) {
-    const uploads = req.files.map(f => {
-        const dimensions = sizeOf(f.path);
-        return {
-            id: uuid(),
-            filePath: f.path,
-            title: f.filename,
-            size: f.size,
-            width: dimensions.width,
-            height: dimensions.height,
-            onCanvas: false,
-            dimension: 1
-        }
-    })
-    uploads.forEach(upl => db.push(upl))
-    res.send(db)
-}
+const addImagesToSection = (sectionId, imageIds) =>
+  db
+    .update(dbFields.sections, sections =>
+      sections.map(section =>
+        section.id === sectionId ? { ...section, imageIds: [...section.imageIds, ...imageIds] } : section,
+      ),
+    )
+    .write()
 
-require('./uploader').init(app, uploadCb);
+require('./uploader').init(app, uploadCb)
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
-
-//nexus.corp.mobile.de/nexus/content/groups/npm-all/:_authToken=NpmToken.397fea42-76f1-39cb-9715-1b61e35a1668
-// _auth=b2Jhcmlub3Y6QmFyaWdhMTIzamtidmdiZmxmISQ=
