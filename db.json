@@ -2,14 +2,24 @@
   "sections": [
     {
       "id": "4aee9b38-fec9-4d57-81ff-2c5190c3cd40",
-      "imageIds": [],
-      "name": "Some new one",
-      "width": "",
-      "length": "",
-      "depth": "",
+      "imageIds": [
+        "a740a038-9df9-4172-88b4-f6cd562ff13f",
+        "d3dfe214-8f16-4a85-b865-0d69b68c911f"
+      ],
+      "name": "Hello Fred!",
+      "width": null,
+      "length": null,
+      "depth": null,
       "medium": "",
-      "year": "",
-      "synopisis": ""
+      "year": null,
+      "synopisis": "",
+      "canvas": {
+        "x": 53.3125,
+        "y": 37.34375,
+        "width": 960,
+        "height": 1280,
+        "depth": 0
+      }
     },
     {
       "id": "bc310789-43e3-43e6-9ac6-4cbcd831ad87",
@@ -18,12 +28,19 @@
         "77705352-5767-4116-8f29-c039bdefd7d9"
       ],
       "name": "Section with images",
-      "width": "500",
-      "length": "",
-      "depth": "",
+      "width": 500,
+      "length": null,
+      "depth": null,
       "medium": "",
-      "year": "2019",
-      "synopisis": "Very good one!"
+      "year": 2019,
+      "synopisis": "Very good one!",
+      "canvas": {
+        "x": 1013.609375,
+        "y": 34.125,
+        "width": 500,
+        "height": 480,
+        "depth": 0
+      }
     }
   ],
   "images": [
@@ -42,6 +59,22 @@
       "size": 181984,
       "width": 864,
       "height": 480
+    },
+    {
+      "id": "a740a038-9df9-4172-88b4-f6cd562ff13f",
+      "filePath": "uploads/1551453041734.jpg",
+      "title": "1551453041734.jpg",
+      "size": 181069,
+      "width": 960,
+      "height": 1280
+    },
+    {
+      "id": "d3dfe214-8f16-4a85-b865-0d69b68c911f",
+      "filePath": "uploads/1551461925565.jpg",
+      "title": "1551461925565.jpg",
+      "size": 217010,
+      "width": 960,
+      "height": 1280
     }
   ]
 }

@@ -18,19 +18,6 @@ const dbFields = {
   sections: 'sections',
 }
 
-// DEV: for testing purpose
-let mockImages = [
-  {
-    id: '7fcb6ad1-5517-4ed5-b3bb-9e7a2e88bae8',
-    filePath: 'uploads/1547302188557.jpg',
-    title: '1547302188557.jpg',
-    size: 171702,
-    width: 1280,
-    height: 960,
-    dimension: 1,
-  },
-]
-
 app.use(cors())
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
@@ -89,28 +76,6 @@ app.delete('/section/:id', (req, res) => {
     onError(e, res)
   }
 })
-
-/*
-const addToCanvas = (itemId, item) => {
-  const newItem = {
-    x: 0,
-    y: 0,
-    width: item.width,
-    height: item.height,
-    path: item.filePath,
-    itemId,
-  }
-}
-
-const updateItem = (item, data) => ({
-  ...item,
-  ...data,
-  id: item.id,
-  filePath: item.filePath,
-  size: item.size,
-  onCanvas: item.onCanvas,
-})
-*/
 
 const onError = (err, res) => {
   console.log(err)
