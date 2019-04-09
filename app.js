@@ -1,4 +1,5 @@
 const express = require('express')
+const fs = require('fs')
 const cors = require('cors')
 const uuid = require('uuid/v4')
 const sizeOf = require('image-size')
@@ -62,12 +63,12 @@ app.delete('/section/:id', (req, res) => {
       .get(dbFields.sections)
       .find({ id: sectionId })
       .value()
-    section.imageIds.forEach(imId =>
-      db
-        .get(dbFields.images)
-        .remove({ id: imId })
-        .write(),
-    )
+    section.imageIds.forEach(imId => {
+      const images = db.get(dbFields.images)
+      const path = images.find({ id: imId }).value().filePath
+      deleteImage(path)
+      images.remove({ id: imId }).write()
+    })
     db.get(dbFields.sections)
       .remove({ id: sectionId })
       .write()
@@ -76,6 +77,33 @@ app.delete('/section/:id', (req, res) => {
     onError(e, res)
   }
 })
+
+app.delete('/image/:id', (req, res) => {
+  try {
+    const imageId = req.params.id
+    const sections = db.get(dbFields.sections).value()
+    const imagePath = db
+      .get(dbFields.images)
+      .find({ id: imageId })
+      .value().filePath
+    deleteImage(imagePath)
+    const section = sections.find(s => s.imageIds.includes(imageId))
+    db.update(dbFields.sections, arr =>
+      arr.map(s => (s.id === section.id ? { ...s, imageIds: section.imageIds.filter(id => id !== imageId) } : s)),
+    ).write()
+    db.get(dbFields.images).remove({ id: imageId }).write()
+    res.send(db.getState())
+  } catch (e) {
+    onError(e, res)
+  }
+})
+
+const deleteImage = path => {
+  fs.unlink(path, err => {
+    if (err) throw err
+    console.log(`${path} was deleted`)
+  })
+}
 
 const onError = (err, res) => {
   console.log(err)

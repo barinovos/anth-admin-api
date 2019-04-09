@@ -1,12 +1,11 @@
 {
   "sections": [
     {
-      "id": "4aee9b38-fec9-4d57-81ff-2c5190c3cd40",
+      "id": "beb31346-63a5-4f30-ad72-092d9a6c8b2a",
       "imageIds": [
-        "a740a038-9df9-4172-88b4-f6cd562ff13f",
-        "d3dfe214-8f16-4a85-b865-0d69b68c911f"
+        "894b0c07-9578-48f5-9131-75143ea19d00"
       ],
-      "name": "Hello Fred!",
+      "name": "Super duper",
       "width": null,
       "length": null,
       "depth": null,
@@ -14,67 +13,52 @@
       "year": null,
       "synopisis": "",
       "canvas": {
-        "x": 53.3125,
-        "y": 37.34375,
-        "width": 960,
-        "height": 1280,
+        "id": "beb31346-63a5-4f30-ad72-092d9a6c8b2a",
+        "path": "uploads/1554727980226.31",
+        "x": 480,
+        "y": 119,
+        "width": 212,
+        "height": 215,
         "depth": 0
       }
     },
     {
-      "id": "bc310789-43e3-43e6-9ac6-4cbcd831ad87",
+      "id": "dc6f91c2-e64f-4c48-9b3d-423a17988bde",
       "imageIds": [
-        "60deba3b-e462-478e-97d9-bb543ec2caf8",
-        "77705352-5767-4116-8f29-c039bdefd7d9"
+        "29a64a44-bac1-4884-878b-5632a4de9b41"
       ],
-      "name": "Section with images",
-      "width": 500,
+      "name": "Test",
+      "width": null,
       "length": null,
       "depth": null,
       "medium": "",
-      "year": 2019,
-      "synopisis": "Very good one!",
+      "year": null,
+      "synopisis": "",
       "canvas": {
-        "x": 1013.609375,
-        "y": 34.125,
-        "width": 500,
-        "height": 480,
+        "x": 806,
+        "y": 112,
+        "width": 540,
+        "height": 270,
         "depth": 0
       }
     }
   ],
   "images": [
     {
-      "id": "60deba3b-e462-478e-97d9-bb543ec2caf8",
-      "filePath": "uploads/1551106182218.jpg",
-      "title": "1551106182218.jpg",
-      "size": 171702,
+      "id": "894b0c07-9578-48f5-9131-75143ea19d00",
+      "filePath": "uploads/1554727980226.31",
+      "title": "1554727980226.31",
+      "size": 6018,
+      "width": 142,
+      "height": 144
+    },
+    {
+      "id": "29a64a44-bac1-4884-878b-5632a4de9b41",
+      "filePath": "uploads/1554810093841.jpg",
+      "title": "1554810093841.jpg",
+      "size": 239859,
       "width": 1280,
-      "height": 960
-    },
-    {
-      "id": "77705352-5767-4116-8f29-c039bdefd7d9",
-      "filePath": "uploads/1551106182224.jpg",
-      "title": "1551106182224.jpg",
-      "size": 181984,
-      "width": 864,
-      "height": 480
-    },
-    {
-      "id": "a740a038-9df9-4172-88b4-f6cd562ff13f",
-      "filePath": "uploads/1551453041734.jpg",
-      "title": "1551453041734.jpg",
-      "size": 181069,
-      "width": 960,
-      "height": 1280
-    },
-    {
-      "id": "d3dfe214-8f16-4a85-b865-0d69b68c911f",
-      "filePath": "uploads/1551461925565.jpg",
-      "title": "1551461925565.jpg",
-      "size": 217010,
-      "width": 960,
-      "height": 1280
+      "height": 640
     }
   ]
 }
