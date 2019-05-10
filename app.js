@@ -17,6 +17,8 @@ const db = low(adapter)
 const dbFields = {
   images: 'images',
   sections: 'sections',
+  webview: 'webview',
+  pins: 'pins',
 }
 
 app.use(cors())
@@ -38,6 +40,41 @@ app.post('/section', (req, res) => {
     }
     db.update(dbFields.sections, arr => arr.concat(newSection)).write()
     res.send(db.getState())
+  } catch (e) {
+    onError(e, res)
+  }
+})
+
+app.put('/webview', (req, res) => {
+  try {
+    const webview = db.get(dbFields.webview).value()
+    db.update(dbFields.webview, () => ({ ...webview, ...req.body })).write()
+    res.send(db.get(dbFields.webview).value())
+  } catch (e) {
+    onError(e, res)
+  }
+})
+
+app.post('/pin', (req, res) => {
+  try {
+    const newPin = {
+      id: uuid(),
+      ...req.body,
+    }
+    db.update(dbFields.pins, arr => arr.concat(newPin)).write()
+    res.send(db.get(dbFields.pins).value())
+  } catch (e) {
+    onError(e, res)
+  }
+})
+
+app.delete('/pin/:pinId', (req, res) => {
+  try {
+    const pinId = req.params.pinId
+    db.get(dbFields.pins)
+      .remove({ id: pinId })
+      .write()
+    res.send(db.get(dbFields.pins).value())
   } catch (e) {
     onError(e, res)
   }
@@ -72,7 +109,7 @@ app.delete('/section/:id', (req, res) => {
     db.get(dbFields.sections)
       .remove({ id: sectionId })
       .write()
-    res.send(db)
+    res.send(db.getState())
   } catch (e) {
     onError(e, res)
   }
@@ -91,7 +128,9 @@ app.delete('/image/:id', (req, res) => {
     db.update(dbFields.sections, arr =>
       arr.map(s => (s.id === section.id ? { ...s, imageIds: section.imageIds.filter(id => id !== imageId) } : s)),
     ).write()
-    db.get(dbFields.images).remove({ id: imageId }).write()
+    db.get(dbFields.images)
+      .remove({ id: imageId })
+      .write()
     res.send(db.getState())
   } catch (e) {
     onError(e, res)
