@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "title": " Anthromes Mock API",
     "description": "API for the Admin part of the Anthromes project by @FreddyTheGreat",
     "license": {
@@ -13,138 +13,109 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "Sections",
-      "description": "API for sections with images on the Canvas"
+      "name": "DB",
+      "description": "API for the DB REST, Sections, Images, Pins, WebView"
     }
   ],
   "schemes": ["http"],
   "consumes": ["application/json"],
   "produces": ["application/json"],
   "paths": {
-    "/canvas": {
+    "/db": {
       "get": {
-        "tags": ["Canvas"],
-        "summary": "Get all images on canvas",
+        "tags": ["DB"],
+        "summary": "Get the whole DB snapshot",
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Canvas"
+              "$ref": "#/definitions/db"
             }
           }
         }
       }
     },
-    "/canvas/:imageId": {
+    "/section/:sectionId": {
       "parameters": [
         {
-          "name": "imageId",
+          "name": "sectionId",
           "in": "path",
           "required": true,
-          "description": "ID of an image",
+          "description": "ID of a section",
           "type": "string"
         }
       ],
       "put": {
-        "summary": "Update image position with given ID on the canvas",
-        "tags": ["Canvas", "CanvasItem"],
-        "parameters": [
-          {
-            "name": "x",
-            "in": "body",
-            "description": "new x coord",
-            "schema": {
-              "$ref": "#/definitions/CanvasItem"
-            }
-          },
-          {
-            "name": "y",
-            "in": "body",
-            "description": "new y coord",
-            "schema": {
-              "$ref": "#/definitions/CanvasItem"
-            }
-          }
-        ],
+        "summary": "Update section",
+        "tags": ["section"],
         "responses": {
           "200": {
-            "description": "Canvas is updated",
+            "description": "Section is updated",
             "schema": {
-              "$ref": "#/definitions/CanvasItem"
+              "$ref": "#/definitions/section"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes the section and all uploaded images to it",
+        "tags": ["section", "Image"],
+        "responses": {
+          "200": {
+            "description": "Section is deleted",
+            "schema": {
+              "$ref": "#/definitions/section"
             }
           }
         }
       }
     },
-    "/add-to-canvas/:imageId": {
-      "parameters": [
-        {
-          "name": "imageId",
-          "in": "path",
-          "required": true,
-          "description": "ID of an image",
-          "type": "string"
-        }
-      ],
+    "/webview": {
       "put": {
-        "summary": "Update Canvas with given imageId",
-        "tags": ["Canvas", "Image"],
+        "summary": "Update a WebView",
+        "tags": ["Webview"],
         "responses": {
           "200": {
-            "description": "Canvas is updated",
+            "description": "Webview is updated",
             "schema": {
-              "$ref": "#/definitions/Canvas"
+              "$ref": "#/definitions/Webview"
             }
           }
         }
       }
     },
-    "/remove-from-canvas/:imageId": {
+    "/pin/:pinId": {
       "parameters": [
         {
-          "name": "imageId",
+          "name": "pinId",
           "in": "path",
           "required": true,
-          "description": "ID of an image",
+          "description": "ID of a pin",
           "type": "string"
         }
       ],
       "delete": {
-        "summary": "Remove form Canvas image with given imageId",
-        "tags": ["Canvas", "Image"],
+        "summary": "Remove the Pin with given pinId",
+        "tags": ["Pin"],
         "responses": {
           "200": {
-            "description": "Canvas is updated",
+            "description": "Pin is deleted",
             "schema": {
-              "$ref": "#/definitions/Canvas"
+              "$ref": "#/definitions/Pin"
             }
           }
         }
       }
     },
-    "/": {
-      "get": {
-        "tags": ["Images"],
-        "summary": "Get all uploaded Images",
+    "/pin": {
+      "post": {
+        "tags": ["Pin"],
+        "summary": "Adds a pin to the DB",
         "responses": {
           "200": {
-            "description": "Array of Images",
+            "description": "Array of Pins",
             "schema": {
-              "$ref": "#/definitions/Images"
-            }
-          }
-        }
-      }
-    },
-    "/images": {
-      "get": {
-        "tags": ["Images"],
-        "summary": "Get all uploaded Images",
-        "responses": {
-          "200": {
-            "description": "Array of Images",
-            "schema": {
-              "$ref": "#/definitions/Images"
+              "$ref": "#/definitions/Pins"
             }
           }
         }
@@ -171,42 +142,68 @@
             }
           }
         }
-      },
-      "put": {
-        "summary": "Update image with give ID",
-        "tags": ["Images"],
-        "parameters": [
-          {
-            "name": "title",
-            "in": "body",
-            "description": "Image with new values of properties (on drag on Canvas only)",
-            "schema": {
-              "$ref": "#/definitions/Image"
-            }
-          },
-          {
-            "name": "dimension",
-            "in": "body",
-            "description": "Image with new values of properties (on drag on Canvas only)",
-            "schema": {
-              "$ref": "#/definitions/Image"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Image is updated",
-            "schema": {
-              "$ref": "#/definitions/Image"
-            }
-          }
-        }
       }
     }
   },
   "definitions": {
-    "CanvasItem": {
-      "required": ["x", "y", "width", "height", "path"],
+    "db": {
+      "properties": {
+        "sections": {
+          "type": "array",
+          "$ref": "#/definitions/Section"
+        },
+        "images": {
+          "type": "array",
+          "$ref": "#/definitions/Image"
+        },
+        "webview": {
+          "$ref": "#/definitions/Webview"
+        },
+        "pins": {
+          "type": "array",
+          "$ref": "#/definitions/Pin"
+        }
+      }
+    },
+    "Section": {
+      "required": ["id", "name"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "imageIds": {
+          "type": "array"
+        },
+        "name": {
+          "type": "string"
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "depth": {
+          "type": "string"
+        },
+        "medium": {
+          "type": "string"
+        },
+        "year": {
+          "type": "string"
+        },
+        "synopisis": {
+          "type": "string"
+        },
+        "canvas": {
+          "type": "object",
+          "$ref": "#/definitions/Canvas"
+        }
+      }
+    },
+    "Canvas": {
+      "required": ["x", "y", "width", "height", "depth"],
       "properties": {
         "x": {
           "type": "number"
@@ -220,14 +217,27 @@
         "height": {
           "type": "number"
         },
-        "path": {
-          "type": "string"
+        "depth": {
+          "type": "number"
         }
       }
     },
-    "Canvas": {
-      "type": "array",
-      "$ref": "#/definitions/CanvasItem"
+    "Webview": {
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        }
+      }
     },
     "Image": {
       "required": ["id", "filePath"],
@@ -242,9 +252,6 @@
         "size": {
           "type": "number"
         },
-        "dimension": {
-          "type": "number"
-        },
         "width": {
           "type": "number"
         },
@@ -253,15 +260,31 @@
         },
         "filePath": {
           "type": "string"
-        },
-        "onCanvas": {
-          "type": "boolean"
         }
       }
     },
     "Images": {
       "type": "array",
       "$ref": "#/definitions/Image"
+    },
+    "Pin": {
+      "required": ["id", "x", "y"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      }
+    },
+    "Pins": {
+      "type": "array",
+      "$ref": "#/definitions/Pin"
     }
   }
 }

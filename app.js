@@ -45,6 +45,41 @@ app.post('/section', (req, res) => {
   }
 })
 
+app.put('/section/:sectionId', (req, res) => {
+  try {
+    const sectionId = req.params.sectionId
+    const data = req.body
+    db.update(dbFields.sections, arr =>
+      arr.map(section => (section.id === sectionId ? { ...section, ...data, id: sectionId } : section)),
+    ).write()
+    res.send(db.getState())
+  } catch (e) {
+    onError(e, res)
+  }
+})
+
+app.delete('/section/:sectionId', (req, res) => {
+  try {
+    const sectionId = req.params.sectionId
+    const section = db
+      .get(dbFields.sections)
+      .find({ id: sectionId })
+      .value()
+    section.imageIds.forEach(imId => {
+      const images = db.get(dbFields.images)
+      const path = images.find({ id: imId }).value().filePath
+      deleteImage(path)
+      images.remove({ id: imId }).write()
+    })
+    db.get(dbFields.sections)
+      .remove({ id: sectionId })
+      .write()
+    res.send(db.getState())
+  } catch (e) {
+    onError(e, res)
+  }
+})
+
 app.put('/webview', (req, res) => {
   try {
     const webview = db.get(dbFields.webview).value()
@@ -75,41 +110,6 @@ app.delete('/pin/:pinId', (req, res) => {
       .remove({ id: pinId })
       .write()
     res.send(db.get(dbFields.pins).value())
-  } catch (e) {
-    onError(e, res)
-  }
-})
-
-app.put('/section/:sectionId', (req, res) => {
-  try {
-    const sectionId = req.params.sectionId
-    const data = req.body
-    db.update(dbFields.sections, arr =>
-      arr.map(section => (section.id === sectionId ? { ...section, ...data, id: sectionId } : section)),
-    ).write()
-    res.send(db.getState())
-  } catch (e) {
-    onError(e, res)
-  }
-})
-
-app.delete('/section/:id', (req, res) => {
-  try {
-    const sectionId = req.params.id
-    const section = db
-      .get(dbFields.sections)
-      .find({ id: sectionId })
-      .value()
-    section.imageIds.forEach(imId => {
-      const images = db.get(dbFields.images)
-      const path = images.find({ id: imId }).value().filePath
-      deleteImage(path)
-      images.remove({ id: imId }).write()
-    })
-    db.get(dbFields.sections)
-      .remove({ id: sectionId })
-      .write()
-    res.send(db.getState())
   } catch (e) {
     onError(e, res)
   }
