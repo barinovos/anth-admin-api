@@ -103,6 +103,19 @@ app.post('/pin', (req, res) => {
   }
 })
 
+app.put('/pin/:pinId', (req, res) => {
+  try {
+    const pinId = req.params.pinId
+    const data = req.body
+    db.update(dbFields.pins, arr =>
+      arr.map(pin => (pin.id === pinId ? { ...pin, ...data, id: pinId } : pin)),
+    ).write()
+    res.send(db.get(dbFields.pins).value())
+  } catch (e) {
+    onError(e, res)
+  }
+})
+
 app.delete('/pin/:pinId', (req, res) => {
   try {
     const pinId = req.params.pinId

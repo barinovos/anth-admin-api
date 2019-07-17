@@ -168,10 +168,47 @@
     }
   ],
   "webview": {
-    "x": 0,
-    "y": 0,
-    "width": 1200,
-    "height": 600
+    "x": 1486,
+    "y": 277,
+    "width": 2213,
+    "height": 1184
   },
-  "pins": []
+  "pins": [
+    {
+      "id": "b6a3f93b-2b88-48a7-985e-2bc5d7f05772",
+      "headline": "sfd",
+      "medium": "",
+      "description": "234",
+      "image": "",
+      "x": 258,
+      "y": 108
+    },
+    {
+      "id": "979e3dc5-07e8-43a1-a445-54f678b837cd",
+      "headline": "sdf",
+      "medium": "",
+      "description": "sdf",
+      "image": "",
+      "x": 818,
+      "y": 244
+    },
+    {
+      "id": "a572c1b5-bc7a-4e58-acd3-96501abba0d4",
+      "headline": "sdf",
+      "medium": "",
+      "description": "sdf",
+      "image": "",
+      "x": 1720,
+      "y": 710
+    },
+    {
+      "id": "bf2ec4fd-b5f2-4102-ba20-1fde00e55e86",
+      "headline": "sdf",
+      "medium": "",
+      "description": "sdf",
+      "image": "",
+      "x": 610,
+      "y": 97
+    }
+  ]
 }
