@@ -35,7 +35,7 @@
         }
       }
     },
-    "/section/:sectionId": {
+    "/section/{sectionId}": {
       "parameters": [
         {
           "name": "sectionId",
@@ -84,7 +84,7 @@
         }
       }
     },
-    "/pin/:pinId": {
+    "/pin/{pinId}": {
       "parameters": [
         {
           "name": "pinId",
@@ -94,6 +94,18 @@
           "type": "string"
         }
       ],
+      "put": {
+        "summary": "Update the Pin with given pinId",
+        "tags": ["Pin"],
+        "responses": {
+          "200": {
+            "description": "Pin is updated",
+            "schema": {
+              "$ref": "#/definitions/Pin"
+            }
+          }
+        }
+      },
       "delete": {
         "summary": "Remove the Pin with given pinId",
         "tags": ["Pin"],
@@ -139,6 +151,59 @@
             "description": "Image is deleted",
             "schema": {
               "$ref": "#/definitions/Image"
+            }
+          }
+        }
+      }
+    },
+    "/upload": {
+      "post": {
+        "tags": ["Images"],
+        "parameters": [
+          {
+            "name": "images[]",
+            "in": "formData",
+            "required": true,
+            "description": "Array of image files",
+            "type": "file"
+          }
+        ],
+        "summary": "Uploads the image files and updates the Images DB",
+        "responses": {
+          "200": {
+            "description": "Images uploaded",
+            "schema": {
+              "$ref": "#/definitions/Image"
+            }
+          }
+        }
+      }
+    },
+    "/pin-upload": {
+      "post": {
+        "tags": ["Images", "Pin"],
+        "parameters": [
+          {
+            "name": "image",
+            "in": "formData",
+            "required": true,
+            "description": "Image file",
+            "type": "file"
+          },
+          {
+            "name": "pinId",
+            "in": "formData",
+            "required": true,
+            "description": "ID of a pin, with will update imageUrl prop in it with the URL",
+            "type": "string"
+          }
+        ],
+        "summary": "Uploads the imag file related to the specific Pin",
+        "responses": {
+          "200": {
+            "description": "Image for Pin with pinId uploaded",
+            "schema": {
+              "$ref": "#/definitions/Pin"
             }
           }
         }
@@ -279,6 +344,21 @@
         },
         "y": {
           "type": "number"
+        },
+        "headline": {
+          "type": "string"
+        },
+        "medium": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "link": {
+          "type": "string"
         }
       }
     },

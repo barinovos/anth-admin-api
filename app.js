@@ -119,6 +119,10 @@ app.put('/pin/:pinId', (req, res) => {
 app.delete('/pin/:pinId', (req, res) => {
   try {
     const pinId = req.params.pinId
+    const imageUrl = db.get(dbFields.pins).find({ id: pinId }).value().imageUrl
+    if (imageUrl) {
+      deleteImage(imageUrl)
+    }
     db.get(dbFields.pins)
       .remove({ id: pinId })
       .write()
@@ -171,7 +175,7 @@ const newImage = (f, { width, height }) => ({
   height,
 })
 
-const uploadCb = function(req, res) {
+const uploadCb = (req, res) => {
   const uploads = req.files.map(f => newImage(f, sizeOf(f.path)))
   const sectionId = req.body.sectionId
   db.update(dbFields.images, arr => [...arr, ...uploads]).write()
@@ -190,6 +194,18 @@ const addImagesToSection = (sectionId, imageIds) =>
     )
     .write()
 
-require('./uploader').init(app, uploadCb)
+const pinUploadCb = (req, res) => {
+  try {
+    const pinId = req.body.pinId
+    db.update(dbFields.pins, arr =>
+      arr.map(pin => (pin.id === pinId ? { ...pin, imageUrl: req.file.path } : pin)),
+    ).write()
+    res.send(db.get(dbFields.pins).value())
+  } catch (e) {
+    onError(e, res)
+  }
+}
+
+require('./uploader').init(app, uploadCb, pinUploadCb)
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

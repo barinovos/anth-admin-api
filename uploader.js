@@ -1,7 +1,7 @@
 const express = require('express')
 
 module.exports = {
-  init(app, uploadCb) {
+  init(app, uploadCb, pinUploadCb) {
     const multer = require('multer')
 
     const possibleMimetypes = ['image/jpeg', 'image/png']
@@ -29,5 +29,7 @@ module.exports = {
     app.use(`/${folder}`, express.static(folder))
 
     app.post('/upload', upload.array('images[]', 12), uploadCb)
+
+    app.post('/pin-upload', upload.single('image'), pinUploadCb)
   },
 }

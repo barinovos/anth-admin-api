@@ -179,7 +179,8 @@
       "headline": "sfd",
       "medium": "",
       "description": "234",
-      "image": "",
+      "imageUrl": "uploads/1564311971898.jpg",
+      "link": "some link",
       "x": 258,
       "y": 108
     },
@@ -188,7 +189,8 @@
       "headline": "sdf",
       "medium": "",
       "description": "sdf",
-      "image": "",
+      "imageUrl": "uploads/1564312593584.jpg",
+      "link": "some link 2",
       "x": 818,
       "y": 244
     },
@@ -197,18 +199,10 @@
       "headline": "sdf",
       "medium": "",
       "description": "sdf",
-      "image": "",
+      "imageUrl": "",
+      "link": "",
       "x": 1720,
       "y": 710
-    },
-    {
-      "id": "bf2ec4fd-b5f2-4102-ba20-1fde00e55e86",
-      "headline": "sdf",
-      "medium": "",
-      "description": "sdf",
-      "image": "",
-      "x": 610,
-      "y": 97
     }
   ]
 }
