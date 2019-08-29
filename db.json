@@ -13,13 +13,12 @@
       "depth": null,
       "medium": "",
       "year": null,
-      "synopisis": "some text",
+      "synopisis": "some text tt1",
       "canvas": {
-        "x": 255,
-        "y": 80,
-        "width": 2850,
-        "height": 2864,
-        "depth": 0
+        "x": 111,
+        "y": 18,
+        "width": 1380,
+        "height": 1386
       }
     },
     {
@@ -37,13 +36,10 @@
       "year": null,
       "synopisis": "Something modern",
       "canvas": {
-        "id": "4ec915db-f4f8-4622-af52-b7e1745e6fae",
-        "path": "uploads/1557501259243.jpeg",
-        "x": 3180,
-        "y": 90,
-        "width": 1453,
-        "height": 1468,
-        "depth": 0
+        "x": 1657,
+        "y": 232,
+        "width": 1751,
+        "height": 1774
       }
     },
     {
@@ -190,7 +186,7 @@
       "medium": "",
       "description": "sdf",
       "imageUrl": "uploads/1564312593584.jpg",
-      "link": "some link 2",
+      "link": "https://dsl.1und1.de/Kosten",
       "x": 818,
       "y": 244
     },
